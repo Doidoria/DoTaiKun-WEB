@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import iconLike from '../assets/icon-좋아요.png';
 import iconBubble from '../assets/icon-말풍선.png';
@@ -38,7 +38,6 @@ const communityPosts = [
   { id: 16, type: '유저 이벤트', author: 'HideAndSeek', title: '숨바꼭질 하실 분?', likes: 22, comments: 19, date: '2026-03-10T20:20:00', profile: profile5, thumb: thumbNight },
 ];
 
-// ⭐ 오른쪽 사이드(R-Side) 스크롤 확인을 위해 데이터를 20개로 대폭 늘렸습니다.
 const realtimePosts = [
   { id: 101, category: '자유', author: 'User4', title: '엔더시티 어느 방향으로 가야지 덜 털리나요?', time: '1시간', comments: 1 },
   { id: 102, category: '공략', author: 'User1', title: '전직 몬스터 사냥터 추천 드립니다.', time: '1시간', comments: 11 },
@@ -92,10 +91,23 @@ export default function Community() {
   const [activeCategory, setActiveCategory] = useState('전체');
   const [visibleCount, setVisibleCount] = useState(8);
 
+  // 2. 클릭된 게시글 데이터를 저장하는 State (null이면 모달이 닫힌 상태)
+  const [selectedPost, setSelectedPost] = useState(null);
+
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
     setVisibleCount(8);
   };
+
+  // 3. 모달이 열려있을 때 배경 스크롤 방지 (Scroll Lock)
+  useEffect(() => {
+    if (selectedPost) {
+      document.body.style.overflow = 'hidden'; // 모달 열리면 스크롤 숨김
+    } else {
+      document.body.style.overflow = 'auto'; // 모달 닫히면 원상복구
+    }
+    return () => { document.body.style.overflow = 'auto'; }; // 컴포넌트 언마운트 시 안전장치
+  }, [selectedPost]);
 
   const categorizedPosts = activeCategory === '전체' 
     ? communityPosts 
@@ -106,7 +118,6 @@ export default function Community() {
 
   return (
     <>
-      {/* ⭐ 해결책 2: 커스텀 스크롤바를 강제로 주입하는 <style> 태그 */}
       <style>
         {`
           /* 스크롤바 전체 너비 */
@@ -152,7 +163,6 @@ export default function Community() {
             </div>
           </div>
 
-          {/* ⭐ 해결책 1: items-stretch를 주어 양쪽 박스의 높이가 항상 똑같이 맞춰지게 함 */}
           <div className="flex gap-5 w-full items-stretch">
             
             {/* M-Side (왼쪽 메인 갤러리) */}
@@ -162,12 +172,12 @@ export default function Community() {
                 {displayedPosts.map((post) => (
                   <div 
                     key={post.id}
+                    onClick={() => setSelectedPost(post)} // ⭐ 4. 카드 클릭 시 해당 포스트 데이터를 State에 담습니다.
                     className="w-[250px] h-[250px] rounded-[20px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex flex-col cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)] transition-all duration-300 group"
                     style={{ background: 'linear-gradient(138.53deg, #496168 41.71%, #677F83 100%)' }}
                   >
                     <div className="w-full h-[165px] bg-white rounded-t-[20px] overflow-hidden relative">
                       <img src={post.thumb} alt="썸네일" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                      {/* 썸네일 안쪽 어두운 그라데이션 (텍스트 가독성) */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     
@@ -216,8 +226,7 @@ export default function Community() {
               )}
             </div>
 
-            {/* ⭐ R-Side (오른쪽 사이드 실시간 피드 박스) ⭐ */}
-            {/* absolute 트릭을 사용하여 부모(왼쪽 박스)의 높이에 완벽하게 맞춰서 늘어나게 만듦 */}
+            {/* R-Side (오른쪽 사이드 실시간 피드 박스) */}
             <div className="w-[463px] relative flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-b from-[#43696E] to-[#132936] rounded-[20px] p-6 pr-4 overflow-y-auto dtk-scrollbar">
                 
@@ -260,6 +269,70 @@ export default function Community() {
           </div>
         </div>
       </main>
+
+      {/* ⭐ 5. 모달(Modal) 레이어 추가 */}
+      {/* selectedPost 값이 있을 때만 화면에 렌더링 됩니다. */}
+      {selectedPost && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          
+          {/* 어두운 배경 (클릭 시 모달 닫기) */}
+          <div 
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer"
+            onClick={() => setSelectedPost(null)}
+          ></div>
+
+          {/* 팝업 컨텐츠 박스 */}
+          <div className="relative w-[800px] max-w-full bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] shadow-2xl border border-white/10 overflow-hidden flex flex-col z-10 transition-transform transform scale-100 animate-in fade-in zoom-in duration-200">
+            
+            {/* 닫기 (X) 버튼 */}
+            <button 
+              onClick={() => setSelectedPost(null)}
+              className="absolute top-4 right-4 w-10 h-10 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl transition-colors z-20"
+            >
+              &times;
+            </button>
+
+            {/* 상단 썸네일 이미지 크게 보기 */}
+            <div className="w-full h-[450px] bg-black/50">
+              <img src={selectedPost.thumb} alt="상세 썸네일" className="w-full h-full object-cover" />
+            </div>
+
+            {/* 하단 상세 내용 */}
+            <div className="p-8 flex flex-col gap-4">
+              
+              <div className="flex items-center gap-4 border-b border-white/10 pb-4">
+                <img src={selectedPost.profile} alt="프로필" className="w-[60px] h-[60px] rounded-full border-2 border-[#89A5A7]" />
+                <div>
+                  <h3 className="text-white text-[24px] font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">
+                    {selectedPost.title}
+                  </h3>
+                  <p className="text-[#ACACAC] text-[16px]">
+                    by {selectedPost.author} · {new Date(selectedPost.date).toLocaleString('ko-KR')}
+                  </p>
+                </div>
+              </div>
+
+              {/* 본문 텍스트 (더미 데이터) */}
+              <div className="text-[#DEDEDE] text-[18px] leading-relaxed py-4 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">
+                유저님이 공유해주신 멋진 스크린샷입니다!<br/>
+                도타이쿤 서버에서 즐거운 시간 보내고 계신 것 같아 기쁘네요. 앞으로도 많은 활동 부탁드립니다!
+              </div>
+
+              <div className="flex items-center gap-6 pt-2">
+                <div className="flex items-center gap-2">
+                  <img src={iconLike} alt="좋아요" className="w-[28px] h-[28px]" />
+                  <span className="text-white text-[20px] font-semibold">{selectedPost.likes}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <img src={iconBubble} alt="댓글" className="w-[22px] h-[22px]" />
+                  <span className="text-white text-[20px] font-semibold">{selectedPost.comments}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
