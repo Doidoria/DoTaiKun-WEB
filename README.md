@@ -3,15 +3,18 @@
 야생 경제와 RPG가 공존하는 마인크래프트 서버, '도타이쿤(DoTaiKun)'을 위한 공식 웹사이트 프론트엔드 프로젝트입니다.
 유저들에게 최신 서버 소식을 전달하고, 창작물과 공략을 공유할 수 있는 커뮤니티 기능을 제공합니다.
 
-🔗 **Live Demo:** [https://do-tai-kun-web.vercel.app](https://do-tai-kun-web.vercel.app)
+**Live Demo:** [https://do-tai-kun-web.vercel.app](https://do-tai-kun-web.vercel.app)
 
 ---
 
 ## Tech Stack (기술 스택)
-* **Framework:** React 18 (Vite)
-* **Styling:** Tailwind CSS
-* **Routing:** React Router v6
-* **Deployment:** Vercel
+<div align="left">
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router" />
+  <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+</div>
 
 ---
 
@@ -40,11 +43,17 @@
 
 ---
 
+## Future Updates (업데이트 예정)
+* **모바일/태블릿 반응형 웹(Responsive Web) 지원** (v2.0 업데이트 예정)
+* 다크 모드 / 라이트 모드 테마 적용
+
+---
+
 ## Getting Started (로컬 실행 방법)
 
 1. 저장소를 클론합니다.
 ```bash
-git clone https://github.com/Doidoria/DoTaiKun-WEB.git
+git clone [https://github.com/Doidoria/DoTaiKun-WEB.git](https://github.com/Doidoria/DoTaiKun-WEB.git)
 ```
 
 2. 패키지를 설치합니다.
