@@ -1,21 +1,24 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Header from './components/Header';
-import Hero from './components/Hero';
-import Content from './components/Content';
 import Footer from './components/Footer';
+import Home from './components/Home';
 import News from './components/News';
 import Community from './components/Community';
 
 function App() {
   return (
-    <div className="relative w-full min-h-screen bg-[#1E1E1E] overflow-x-hidden">
-      <Header />
-      {/* <Hero/> */}
-      {/* <Content/> */}
-      {/* <News /> */}
-      <Community />
-      <Footer/>
-    </div>
+    <BrowserRouter>
+      <div className="relative w-full min-h-screen bg-[#1E1E1E] overflow-x-hidden flex flex-col">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/community" element={<Community />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   )
 }
 
