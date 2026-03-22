@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Content from './components/Content';
 import Footer from './components/Footer';
 import News from './components/News';
+import Community from './components/Community';
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Header />
       {/* <Hero/> */}
       {/* <Content/> */}
-      <News />
+      {/* <News /> */}
+      <Community />
       <Footer/>
     </div>
   )
