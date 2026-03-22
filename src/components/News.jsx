@@ -154,7 +154,7 @@ export default function News() {
 
         {/* Load More 버튼 */}
         {visibleCount < sortedNews.length && (
-          <div className="w-full flex justify-center mt-10 mb-12">
+          <div className="w-full flex justify-center mt-8">
             <button 
               onClick={() => setVisibleCount(prev => prev + 9)} 
               className="w-[160px] h-[48px] rounded-[15px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex items-center justify-center hover:brightness-110 active:scale-95 transition-all" 

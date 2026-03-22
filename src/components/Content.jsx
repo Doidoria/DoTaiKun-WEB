@@ -1,12 +1,11 @@
-// src/components/Content.jsx
 import iconBuild from '../assets/곡괭이.png';
 import iconEcon from '../assets/톱니바퀴.png';
 import iconTrade from '../assets/박스.png';
+import imgUpdate from '../assets/메인페이지_업데이트.png';
 
 // 반복되는 3개의 카드를 깔끔하게 찍어내기 위한 미니 컴포넌트
 function FeatureCard({ icon, title, desc }) {
   return (
-    // 피그마의 conic-gradient 수치를 CSS 인라인 스타일로 정확히 구현 
     <div 
       className="w-[260px] h-[285px] rounded-[15px] shadow-[-1px_7px_10px_rgba(0,0,0,0.25)] flex flex-col items-center justify-start pt-6 transition-transform hover:-translate-y-2 cursor-pointer relative"
       style={{ background: 'conic-gradient(from 32.94deg at 58.08% 31.4%, #426A72 0deg, #33505D 219.81deg, #6F8E93 360deg)' }}
@@ -63,11 +62,10 @@ export default function Content() {
           </h2>
           {/* 업데이트 썸네일 박스 */}
           <div className="w-[382px] h-[163px] bg-[#D9D9D9] rounded-[15px] overflow-hidden relative shadow-lg cursor-pointer group">
-             {/* 임시 이미지 박스 (나중에 실제 썸네일 이미지 넣으세요) */}
              <div className="w-full h-full bg-black/20 group-hover:scale-105 transition-transform duration-300"></div>
           </div>
           {/* 날짜와 제목 */}
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-0">
             <span className="w-2 h-2 rounded-full bg-[#8DFF95] shadow-[0_0_8px_#8DFF95]"></span>
             <p className="text-white text-[22px] font-semibold drop-shadow-[0px_2px_3px_rgba(0,0,0,0.25)]">새로운 컨텐츠 오픈!</p>
           </div>
