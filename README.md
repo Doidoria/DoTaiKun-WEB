@@ -53,7 +53,7 @@
 
 1. 저장소를 클론합니다.
 ```bash
-git clone [https://github.com/Doidoria/DoTaiKun-WEB.git](https://github.com/Doidoria/DoTaiKun-WEB.git)
+git clone https://github.com/Doidoria/DoTaiKun-WEB.git
 ```
 
 2. 패키지를 설치합니다.
