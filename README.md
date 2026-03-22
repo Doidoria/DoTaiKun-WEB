@@ -1,4 +1,4 @@
-# ⛏️ DoTaiKun WEB (도타이쿤 공식 웹사이트)
+# DoTaiKun WEB (도타이쿤 공식 웹사이트)
 
 야생 경제와 RPG가 공존하는 마인크래프트 서버, **'도타이쿤(DoTaiKun)'**을 위한 공식 웹사이트 프론트엔드 프로젝트입니다.
 유저들에게 최신 서버 소식을 전달하고, 창작물과 공략을 공유할 수 있는 커뮤니티 기능을 제공합니다.
@@ -7,7 +7,7 @@
 
 ---
 
-## 🛠️ Tech Stack (기술 스택)
+## Tech Stack (기술 스택)
 * **Framework:** React 18 (Vite)
 * **Styling:** Tailwind CSS
 * **Routing:** React Router v6
@@ -15,7 +15,7 @@
 
 ---
 
-## ✨ Key Features (주요 구현 기능)
+## Key Features (주요 구현 기능)
 
 ### 1. 반응형 & 글래스모피즘 헤더 (Navigation)
 * `react-router-dom`의 `useLocation`을 활용하여 현재 위치한 페이지의 **메뉴 활성화(Active) 상태 표시**
@@ -36,11 +36,11 @@
 * **하이브리드 레이아웃:** `Flex stretch`와 `Absolute` 속성을 활용하여 갤러리 영역(M-Side)의 높이에 맞춰 실시간 피드 영역(R-Side)의 높이가 동기화되도록 구현
 * **커스텀 스크롤바:** Tailwind 내에서 `<style>` 태그를 주입하여 피그마 디자인과 일치하는 커스텀 스크롤바(`dtk-scrollbar`) 적용
 * **상세보기 모달(Modal):** 게시글 클릭 시 상세 내용을 보여주는 팝업 구현
-* 💡 **Scroll Lock:** 모달이 열렸을 때 뒷배경의 스크롤을 방지하여 UX 개선 (`document.body.style.overflow` 제어)
+* **Scroll Lock:** 모달이 열렸을 때 뒷배경의 스크롤을 방지하여 UX 개선 (`document.body.style.overflow` 제어)
 
 ---
 
-## 🚀 Getting Started (로컬 실행 방법)
+## Getting Started (로컬 실행 방법)
 
 1. 저장소를 클론합니다.
 \`\`\`bash
@@ -59,6 +59,6 @@ npm run dev
 
 ---
 
-## 👤 Developer
+## Developer
 **Doidori (도이도리)**
 * GitHub: [https://github.com/Doidoria](https://github.com/Doidoria)
