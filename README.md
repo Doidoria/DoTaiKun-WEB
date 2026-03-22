@@ -1,6 +1,6 @@
 # DoTaiKun WEB (도타이쿤 공식 웹사이트)
 
-야생 경제와 RPG가 공존하는 마인크래프트 서버, **'도타이쿤(DoTaiKun)'**을 위한 공식 웹사이트 프론트엔드 프로젝트입니다.
+야생 경제와 RPG가 공존하는 마인크래프트 서버, '도타이쿤(DoTaiKun)'을 위한 공식 웹사이트 프론트엔드 프로젝트입니다.
 유저들에게 최신 서버 소식을 전달하고, 창작물과 공략을 공유할 수 있는 커뮤니티 기능을 제공합니다.
 
 🔗 **Live Demo:** [https://do-tai-kun-web.vercel.app](https://do-tai-kun-web.vercel.app)
@@ -58,7 +58,3 @@ npm run dev
 ```
 
 ---
-
-## Developer
-**Doidori (도이도리)**
-* GitHub: [https://github.com/Doidoria](https://github.com/Doidoria)
