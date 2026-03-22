@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 전체 화면을 다크 모드로 덮고 기본 글자색을 흰색으로 맞춥니다 */
+body {
+  @apply bg-game-bg text-white m-0 p-0 box-border font-sans;
+}

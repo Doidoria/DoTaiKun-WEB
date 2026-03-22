@@ -1,0 +1,116 @@
+// src/components/Content.jsx
+import { useState, useEffect } from 'react';
+
+import iconBuild from '../assets/곡괭이.png';
+import iconEcon from '../assets/톱니바퀴.png';
+import iconTrade from '../assets/박스.png';
+
+import imgUpdate1 from '../assets/ATContest.png';
+import imgUpdate2 from '../assets/Goblin.png';
+import imgUpdate3 from '../assets/titan.png';
+
+function FeatureCard({ icon, title, desc }) {
+  return (
+    <div 
+      className="w-[260px] h-[285px] rounded-[15px] shadow-[-1px_7px_10px_rgba(0,0,0,0.25)] flex flex-col items-center justify-start pt-6 transition-transform hover:-translate-y-2 cursor-pointer relative"
+      style={{ background: 'conic-gradient(from 32.94deg at 58.08% 31.4%, #426A72 0deg, #33505D 219.81deg, #6F8E93 360deg)' }}
+    >
+      <img 
+        src={icon} 
+        alt={title} 
+        className={`w-[130px] h-[130px] object-contain drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)] mb-4 ${title === '무한한 건설' ? '-rotate-[5.68deg]' : ''}`} 
+      />
+      <h3 className="text-white text-[32px] font-semibold drop-shadow-[0px_2px_2px_rgba(0,0,0,0.25)] mb-2">
+        {title}
+      </h3>
+      <p className="text-[#D8D8D8] text-[15px] font-medium leading-tight text-center px-4 drop-shadow-[0px_2px_2px_rgba(0,0,0,0.25)]">
+        {desc}
+      </p>
+    </div>
+  );
+}
+
+const updateData = [
+  { id: 1, img: imgUpdate1, title: '제1회 건축 대회 개최!', date: '2026-03-20' },
+  { id: 2, img: imgUpdate2, title: '황금 고블린의 숲 오픈', date: '2026-03-17' },
+  { id: 3, img: imgUpdate3, title: '신규 레이드: 타이탄', date: '2026-03-11' },
+];
+
+export default function Content() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % updateData.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="w-full h-[386px] bg-gradient-to-b from-[#194D56] to-[#102A3E] relative z-10 mt-[-450px]">
+      <div className="max-w-[1440px] h-full mx-auto px-10 flex items-center justify-between overflow-hidden">
+        <div className="flex gap-8 flex-shrink-0">
+          <FeatureCard icon={iconBuild} title="무한한 건설" desc="서버내 유저들의 건축물들 구경이 가능합니다." />
+          <FeatureCard icon={iconEcon} title="경제 시스템" desc="도타이쿤 전용 경제 시스템 도입 수많은 컨텐츠 확보" />
+          <FeatureCard icon={iconTrade} title="글로벌 무역" desc="독자적인 무역시스템 개발 마크에서도 주식을?!" />
+        </div>
+        {/* 오른쪽: 최신 업데이트 배너 영역 (이미지 비율 수정 완결판) */}
+        <div className="flex flex-col gap-4 flex-shrink-0 relative w-[382px] group">
+          
+          <h2 className="text-white text-[35px] font-semibold drop-shadow-[0px_5px_5px_rgba(0,0,0,0.25)] tracking-wide">
+            UPDATE
+          </h2>
+          
+          {/* ⭐ [1. 컨테이너 전체 높이 수정] 썸네일과 텍스트를 모두 여유롭게 담기 위해 h-[240px] -> h-[290px] 로 늘림 */}
+          <div className="w-[382px] h-[290px] overflow-hidden relative cursor-pointer">
+            
+            {/* 슬라이더 띠 (기존과 동일) */}
+            <div 
+              className="flex transition-transform duration-500 ease-out w-full" 
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {updateData.map((data) => (
+                <div key={data.id} className="w-full flex-shrink-0">
+                  
+                  {/* ⭐ [2. 썸네일 이미지 영역 비율 수정] 원본 비율(1376x768)에 맞춰 h-[163px] -> h-[213px] 로 큼직하게 늘림 */}
+                  <div className="w-full h-[213px] bg-black/20 overflow-hidden relative rounded-[15px] shadow-lg">
+                     <img 
+                       src={data.img} 
+                       alt={data.title} 
+                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                     />
+                  </div>
+                  
+                  {/* 날짜와 제목 (간격 좁게 세팅) */}
+                  <div className="flex flex-col gap-1 mt-[10px]">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#8DFF95] shadow-[0_0_8px_#8DFF95]"></span>
+                      <p className="text-white text-[20px] font-semibold drop-shadow-[0px_2px_3px_rgba(0,0,0,0.25)] truncate w-[350px]">
+                        {data.title}
+                      </p>
+                    </div>
+                    <p className="text-[#D8D8D8] text-[15px] pl-4 font-medium drop-shadow-[0px_2px_3px_rgba(0,0,0,0.25)]">
+                      {data.date}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* ⭐ [3. 인디케이터 위치 수정] 늘어난 썸네일 높이에 맞춰 썸네일 우측 하단에 고정되도록 top-[135px] -> top-[185px] 로 내림 */}
+            <div className="absolute top-[185px] right-3 flex gap-2 z-20">
+              {updateData.map((_, index) => (
+                <div 
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    currentIndex === index ? 'bg-white shadow-[0_0_8px_white] scale-110' : 'bg-black/50 border border-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
