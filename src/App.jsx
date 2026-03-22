@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full min-h-screen bg-[#1E1E1E] overflow-x-hidden">
       <Header />
       <Hero/>
       <Content/>

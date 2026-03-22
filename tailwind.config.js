@@ -1,20 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  // Tailwind가 스타일을 적용할 파일들의 경로를 지정합니다.
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      // 피그마에서 추출한 색상을 커스텀으로 등록합니다.
       colors: {
-        'game-bg': '#1E1E1E',   // 기본 다크모드 배경색
-        'game-point': '#4A90E2', // 버튼 등에 쓸 포인트 블루 색상
+        'game-bg': '#1E1E1E',
+        'game-point': '#4A90E2',
       },
-      // 1920px 해상도에 맞춘 기준점을 추가합니다.
       screens: {
         'fhd': '1920px', 
+      },
+      // ⭐ 여기에 나만의 애니메이션을 추가합니다!
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' }, // 위로 20px 둥둥 떴다가 내려옴
+        }
+      },
+      animation: {
+        'float-slow': 'float 3s ease-in-out infinite', // 3초 동안 부드럽게 무한 반복
       }
     },
   },

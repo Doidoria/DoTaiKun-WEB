@@ -32,7 +32,7 @@ function FeatureCard({ icon, title, desc }) {
 export default function Content() {
   return (
     // 전체 콘텐츠 섹션 배경 (위에서 아래로 어두워지는 선형 그라데이션) 
-    <section className="w-full h-[386px] bg-gradient-to-b from-[#194D56] to-[#102A3E] relative z-10">
+    <section className="w-full h-[386px] bg-gradient-to-b from-[#194D56] to-[#102A3E] relative z-10 mt-[-450px]">
       
       {/* 1440px 중앙 정렬 컨테이너 (Flex로 카드 3개와 오른쪽 배너를 양분) */}
       <div className="max-w-[1440px] h-full mx-auto px-10 flex items-center justify-between">
