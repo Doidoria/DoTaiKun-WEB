@@ -5,7 +5,7 @@ import rouletteBgImg from '../assets/RoulettePopup.png';
 export default function RoulettePopup({ closeModal }) {
 
   const goToEventPage = () => {
-    window.location.href = '/roulett-Event'; 
+    window.location.href = '/roulett-Event';
   };
 
   return (
