@@ -1,5 +1,4 @@
-// src/components/Content.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import iconBuild from '../assets/곡괭이.png';
 import iconEcon from '../assets/톱니바퀴.png';
@@ -39,16 +38,48 @@ const updateData = [
 export default function Content() {  
   const [currentIndex, setCurrentIndex] = useState(0);  
   
+  const dragStartX = useRef(0);
+  const isDragging = useRef(false);
+  
   useEffect(() => {  
     const timer = setInterval(() => {  
       setCurrentIndex((prevIndex) => (prevIndex + 1) % updateData.length);  
     }, 3000);  
     return () => clearInterval(timer);  
-  }, []);  
+  }, [currentIndex]);
   
+  // 2. 드래그 시작 (마우스 누름 or 터치 시작)
+  const handleDragStart = (e) => {
+    isDragging.current = false;
+    dragStartX.current = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+  };
+
+  // 3. 드래그 끝 (마우스 뗌 or 터치 끝) - 이동 거리 계산
+  const handleDragEnd = (e) => {
+    const endX = e.type.includes('mouse') ? e.clientX : e.changedTouches[0].clientX;
+    const diff = dragStartX.current - endX;
+
+    // 50px 이상 드래그 했을 때만
+    if (Math.abs(diff) > 50) {
+      isDragging.current = true;
+      if (diff > 0) {
+        setCurrentIndex((prev) => (prev + 1) % updateData.length);
+      } else {
+        setCurrentIndex((prev) => (prev === 0 ? updateData.length - 1 : prev - 1));
+      }
+    }
+  };
+
+  // 4. 클릭 이벤트 겹침 방지
+  const handleClick = (e) => {
+    if (isDragging.current) {
+      e.preventDefault();
+    }
+  };
+
   return (  
     <section className="w-full h-[386px] bg-gradient-to-b from-[#194D56] to-[#102A3E] relative z-10 mt-[-450px]">  
-      <div className="max-w-[1440px] h-full mx-auto px-10 flex items-center justify-between overflow-hidden">  
+      <div className="max-w-[1440px] h-full mx-auto px-20 flex items-center justify-between overflow-hidden">  
         <div className="flex gap-8 flex-shrink-0">  
           <FeatureCard icon={iconBuild} title="무한한 건설" desc="서버내 유저들의 건축물들 구경이 가능합니다." />  
           <FeatureCard icon={iconEcon} title="경제 시스템" desc="도타이쿤 전용 경제 시스템 도입 수많은 컨텐츠 확보" />  
@@ -61,23 +92,37 @@ export default function Content() {
             UPDATE  
           </h2>  
             
-          <div className="w-[382px] h-[290px] overflow-hidden relative cursor-pointer">  
+          {/* 마우스 및 터치 이벤트 */}
+          <div 
+            className="w-[382px] h-[290px] overflow-hidden relative cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={handleDragStart}
+            onMouseUp={handleDragEnd}
+            onMouseLeave={(e) => { if(e.buttons === 1) handleDragEnd(e) }}
+            onTouchStart={handleDragStart}
+            onTouchEnd={handleDragEnd}
+          >  
             <div   
               className="flex transition-transform duration-500 ease-out w-full"   
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}  
             >  
               {updateData.map((data) => (  
-                <a key={data.id} href={data.link} className="w-full flex-shrink-0 block relative group/item">  
-                  
+                <a 
+                  key={data.id} 
+                  href={data.link} 
+                  onClick={handleClick}
+                  draggable="false"
+                  className="w-full flex-shrink-0 block relative group/item select-none"
+                >  
                   <div className="w-full h-[213px] bg-black/20 overflow-hidden relative rounded-[15px] shadow-lg">  
                     <img   
                       src={data.img}   
                       alt={data.title}   
+                      draggable="false"
                       className="w-full h-full object-cover group-hover/item:scale-105 transition-transform duration-300"   
                     />  
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <span className="text-white font-bold text-[22px] drop-shadow-md">
-                        {data.id === 1 ? "🏆 콘테스트 투표하기" : " 자세히 보기"}
+                        {data.id === 1 ? "🏆 콘테스트 투표하기" : "자세히 보기"}
                       </span>
                     </div>
                   </div>  
@@ -100,9 +145,13 @@ export default function Content() {
             <div className="absolute top-[185px] right-3 flex gap-2 z-20">  
               {updateData.map((_, index) => (  
                 <div   
-                  key={index}  
-                  className={`w-2 h-2 rounded-full transition-all ${  
-                    currentIndex === index ? 'bg-white shadow-[0_0_8px_white] scale-110' : 'bg-black/50 border border-white/50'  
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(index);
+                  }}
+                  className={`cursor-pointer w-2 h-2 rounded-full transition-all ${  
+                    currentIndex === index ? 'bg-white shadow-[0_0_8px_white] scale-110' : 'bg-black/50 border border-white/50 hover:bg-white/80'  
                   }`}  
                 />  
               ))}  
