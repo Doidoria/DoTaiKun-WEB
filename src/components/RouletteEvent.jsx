@@ -92,10 +92,10 @@ export default function RouletteEvent() {
                     ← 메인으로 돌아가기
                 </a>
                 {/* 임시 테스트용 초기화 버튼 (안전한 위치로 이동) */}
-                <button onClick={() => {localStorage.removeItem("roulette_last_play"); window.location.reload();}}
+                {/* <button onClick={() => {localStorage.removeItem("roulette_last_play"); window.location.reload();}}
                     className="bg-red-600 text-white px-3 py-2 text-sm font-bold rounded border-2 border-[#1C1C1C] shadow-[2px_2px_0_#000] hover:bg-red-700 transition-colors active:translate-y-1 active:shadow-none">
                     [테스트] 기록 삭제
-                </button>
+                </button> */}
             </div>
 
             {/* 헤더 타이틀 */}
