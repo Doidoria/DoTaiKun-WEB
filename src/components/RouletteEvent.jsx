@@ -26,7 +26,7 @@ export default function RouletteEvent() {
     }, []);
 
     const sendDiscordWebhook = async (winnerName, prize) => {
-        const webhookURL = "https://discord.com/api/webhooks/1485562795906039848/8lVuoV9nmdgy7QQkKch3ZfxdXjanNHIXr5rpyBZwtaseE-ZM40Dfe0UL0WE8Qzp7byQc";
+        const webhookURL = "https://discord.com/api/webhooks/1485595750296719440/vhN18nIJB2V7yH9s2g1GNHHGSAWyt_zgjnOc73kqDEgtskbB5bGdglq07Jx3XGwuD01c";
         // if (webhookURL === "여기에_디스코드_웹훅_URL_입력") return; { URL 없을시 에러 방지용 }
 
         const message = {

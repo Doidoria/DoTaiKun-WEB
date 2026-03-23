@@ -7,6 +7,7 @@ import Home from './components/Home';
 import News from './components/News';
 import Community from './components/Community';
 import RouletteEvent from './components/RouletteEvent';
+import ContestVote from './components/ContestVote';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/news" element={<News />} />
           <Route path="/community" element={<Community />} />
           <Route path="/roulett-Event" element={<RouletteEvent />} />
+          <Route path="/contest" element={<ContestVote />} />
         </Routes>
         <Footer />
       </div>

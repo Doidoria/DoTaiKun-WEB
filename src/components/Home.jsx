@@ -15,7 +15,7 @@ export default function Home() {
       <Content />
       
       {/* 플로팅 이벤트 버튼 (우측 하단 고정) */}
-      <div className="fixed bottom-10 right-10 z-50">
+      <div className="fixed bottom-10 right-12 z-40">
         <button 
           onClick={() => setIsModalOpen(true)} 
           className="block bg-transparent border-none cursor-pointer focus:outline-none p-0 outline-none"
@@ -25,7 +25,8 @@ export default function Home() {
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="relative group flex flex-col items-center"
           >
-            <div className="absolute -top-14 bg-gray-900 border-2 border-yellow-400 text-yellow-400 text-sm font-bold py-2 px-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_15px_rgba(250,204,21,0.5)] pointer-events-none whitespace-nowrap z-10">
+            <div className="absolute -top-14 bg-gray-900 border-2 border-yellow-400 text-yellow-400 text-sm font-bold py-2 px-3 rounded-xl opacity-0 
+            group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_15px_rgba(250,204,21,0.5)] pointer-events-none whitespace-nowrap z-10">
               매일매일 룰렛 스핀! 🎡
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-900 border-b-2 border-r-2 border-yellow-400 rotate-45"></div>
             </div>
