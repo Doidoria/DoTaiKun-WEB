@@ -1,4 +1,3 @@
-// src/components/Hero.jsx
 import bgImg from '../assets/메인페이지_배경.png';
 import charImg from '../assets/메인_캐릭터.png';
 
