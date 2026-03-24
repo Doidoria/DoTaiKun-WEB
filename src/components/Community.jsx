@@ -18,7 +18,6 @@ import thumbUser6 from '../assets/users_screenshots/User6.png';
 import thumbUser9 from '../assets/users_screenshots/User9.png';
 import thumbUser11 from '../assets/users_screenshots/User11.png';
 
-// 메인 갤러리(M-Side) 더미 데이터
 const communityPosts = [
   { id: 1, type: '창작물 갤러리', author: 'User12', title: '아름다운 밤 하늘', likes: 21, comments: 12, date: '2026-03-22T21:41:07', profile: profile2, thumb: thumbNight },
   { id: 2, type: '자유게시판', author: 'User11', title: '고슴도치', likes: 23, comments: 17, date: '2026-03-21T19:22:10', profile: profile6, thumb: thumbUser11 },
@@ -74,13 +73,13 @@ function CategoryBtn({ text, isActive, onClick }) {
   return (
     <button 
       onClick={onClick}
-      className={`w-[170px] h-[45px] rounded-[25px] flex items-center justify-center transition-all duration-300 ${
+      className={`w-auto px-4 h-[40px] sm:h-[45px] rounded-[25px] flex items-center justify-center transition-all duration-300 whitespace-nowrap ${
         isActive 
           ? 'bg-gradient-to-r from-[#7696A1] to-[#B7D6DB] shadow-[inset_5px_5px_10px_rgba(0,0,0,0.25),-1px_6px_10px_rgba(0,0,0,0.25)] text-white scale-[0.98] border border-white/20' 
           : 'bg-gradient-to-r from-[#B7D6DB] via-[#94BDCA] to-[#B7D6DB] shadow-[-1px_6px_10px_rgba(0,0,0,0.25)] text-white/80 hover:-translate-y-1 hover:brightness-110 hover:text-white'
       }`}
     >
-      <span className={`text-[20px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] transition-all ${isActive ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.6)]' : ''}`}>
+      <span className={`text-[15px] sm:text-[20px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] transition-all ${isActive ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.6)]' : ''}`}>
         {text}
       </span>
     </button>
@@ -90,8 +89,6 @@ function CategoryBtn({ text, isActive, onClick }) {
 export default function Community() {
   const [activeCategory, setActiveCategory] = useState('전체');
   const [visibleCount, setVisibleCount] = useState(8);
-
-  // 2. 클릭된 게시글 데이터를 저장하는 State (null이면 모달이 닫힌 상태)
   const [selectedPost, setSelectedPost] = useState(null);
 
   const handleCategoryClick = (category) => {
@@ -99,14 +96,13 @@ export default function Community() {
     setVisibleCount(8);
   };
 
-  // 3. 모달이 열려있을 때 배경 스크롤 방지 (Scroll Lock)
   useEffect(() => {
     if (selectedPost) {
-      document.body.style.overflow = 'hidden'; // 모달 열리면 스크롤 숨김
+      document.body.style.overflow = 'hidden'; 
     } else {
-      document.body.style.overflow = 'auto'; // 모달 닫히면 원상복구
+      document.body.style.overflow = 'auto'; 
     }
-    return () => { document.body.style.overflow = 'auto'; }; // 컴포넌트 언마운트 시 안전장치
+    return () => { document.body.style.overflow = 'auto'; }; 
   }, [selectedPost]);
 
   const categorizedPosts = activeCategory === '전체' 
@@ -120,41 +116,24 @@ export default function Community() {
     <>
       <style>
         {`
-          /* 스크롤바 전체 너비 */
-          .dtk-scrollbar::-webkit-scrollbar {
-            width: 11px;
-          }
-          /* 스크롤바 배경 (Track) */
-          .dtk-scrollbar::-webkit-scrollbar-track {
-            background: #1A353D;
-            border-radius: 20px;
-            margin: 20px 0; /* 위아래 여백을 주어 피그마와 똑같게 만듦 */
-          }
-          /* 스크롤바 막대 (Thumb) */
-          .dtk-scrollbar::-webkit-scrollbar-thumb {
-            background: #89A5A7;
-            border-radius: 20px;
-            border: 2px solid #1A353D; /* 배경색과 같은 테두리를 주어 살짝 얇아보이게 함 */
-          }
-          /* 막대에 마우스 올렸을 때 */
-          .dtk-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #9DBCC1;
-          }
+          .dtk-scrollbar::-webkit-scrollbar { width: 8px; sm:width: 11px; }
+          .dtk-scrollbar::-webkit-scrollbar-track { background: #1A353D; border-radius: 20px; margin: 10px 0; }
+          .dtk-scrollbar::-webkit-scrollbar-thumb { background: #89A5A7; border-radius: 20px; border: 2px solid #1A353D; }
+          .dtk-scrollbar::-webkit-scrollbar-thumb:hover { background: #9DBCC1; }
         `}
       </style>
 
-      <main 
-        className="w-full flex-1 pt-[200px] pb-[100px] relative z-10 flex flex-col items-center" 
-        style={{ background: 'linear-gradient(180deg, #7ABADB 23.56%, #9BD1D5 43.75%, #0F2432 100%)' }}
-      >
-        <h1 className="text-center text-white text-[60px] font-bold drop-shadow-[-1px_5px_7px_rgba(0,0,0,0.25)] mb-[28px]">
+      <main className="w-full flex-1 pt-[150px] md:pt-[200px] pb-[100px] relative z-10 flex flex-col items-center min-h-screen" 
+        style={{ background: 'linear-gradient(180deg, #7ABADB 23.56%, #9BD1D5 43.75%, #0F2432 100%)' }}>
+        <h1 className="text-center text-white text-[45px] md:text-[60px] font-bold drop-shadow-[-1px_5px_7px_rgba(0,0,0,0.25)] mb-[20px] md:mb-[28px]">
           커뮤니티
         </h1>
 
-        <div className="w-[1564px] max-w-[95%]">
+        <div className="w-full max-w-[1564px] px-4 md:px-6">
           
-          <div className="flex items-center mb-6 pl-[8px]">
-            <div className="flex gap-4">
+          {/* 카테고리 툴바 (모바일 가로 스크롤 지원) */}
+          <div className="flex items-center mb-6 overflow-x-auto pb-2 dtk-scrollbar">
+            <div className="flex gap-2 sm:gap-4 min-w-max">
               <CategoryBtn text="전체" isActive={activeCategory === '전체'} onClick={() => handleCategoryClick('전체')} />
               <CategoryBtn text="창작물 갤러리" isActive={activeCategory === '창작물 갤러리'} onClick={() => handleCategoryClick('창작물 갤러리')} />
               <CategoryBtn text="실시간 공략" isActive={activeCategory === '실시간 공략'} onClick={() => handleCategoryClick('실시간 공략')} />
@@ -162,18 +141,14 @@ export default function Community() {
               <CategoryBtn text="자유게시판" isActive={activeCategory === '자유게시판'} onClick={() => handleCategoryClick('자유게시판')} />
             </div>
           </div>
-
-          <div className="flex gap-5 w-full items-stretch">
-            
-            {/* M-Side (왼쪽 메인 갤러리) */}
-            <div className="w-[1081px] bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] p-[20px] flex flex-col items-center">
-              
-              <div className="grid grid-cols-4 gap-x-[15px] gap-y-5 w-full">
+          <div className="flex flex-col xl:flex-row gap-5 w-full items-stretch">
+            <div className="w-full xl:w-[1081px] xl:flex-shrink-0 bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] p-[15px] sm:p-[20px] flex flex-col items-center shadow-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-5 w-full place-items-center">
                 {displayedPosts.map((post) => (
                   <div 
                     key={post.id}
-                    onClick={() => setSelectedPost(post)} // ⭐ 4. 카드 클릭 시 해당 포스트 데이터를 State에 담습니다.
-                    className="w-[250px] h-[250px] rounded-[20px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex flex-col cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)] transition-all duration-300 group"
+                    onClick={() => setSelectedPost(post)} 
+                    className="w-full max-w-[250px] h-[250px] rounded-[20px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex flex-col cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)] transition-all duration-300 group"
                     style={{ background: 'linear-gradient(138.53deg, #496168 41.71%, #677F83 100%)' }}
                   >
                     <div className="w-full h-[165px] bg-white rounded-t-[20px] overflow-hidden relative">
@@ -218,43 +193,37 @@ export default function Community() {
                   </button>
                 </div>
               )}
-              
-              {displayedPosts.length === 0 && (
-                <div className="w-full h-full flex items-center justify-center py-20">
-                  <p className="text-white/70 text-2xl font-semibold">등록된 게시물이 없습니다.</p>
-                </div>
-              )}
             </div>
 
             {/* R-Side (오른쪽 사이드 실시간 피드 박스) */}
-            <div className="w-[463px] relative flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#43696E] to-[#132936] rounded-[20px] p-6 pr-4 overflow-y-auto dtk-scrollbar">
+            <div className="w-full xl:w-[463px] h-[500px] xl:h-auto relative flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-b from-[#43696E] to-[#132936] rounded-[20px] p-4 sm:p-6 pr-2 sm:pr-4 overflow-y-auto dtk-scrollbar shadow-xl">
                 
-                <div className="sticky top-0 bg-gradient-to-b from-[#43696E] via-[#43696E] to-transparent pb-4 z-10">
-                  <h2 className="text-white text-[24px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] border-b border-white/10 pb-3">
+                <div className="sticky top-0 bg-gradient-to-b from-[#43696E] via-[#43696E] to-transparent pb-4 z-10 pt-2">
+                  <h2 className="text-white text-[20px] sm:text-[24px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] border-b border-white/10 pb-3">
                     실시간 피드
                   </h2>
                 </div>
                 
-                <div className="flex flex-col gap-6 mt-2">
+                <div className="flex flex-col gap-4 sm:gap-6 mt-2">
                   {realtimePosts.map((post) => (
-                    <div key={post.id} className="flex flex-col gap-2 cursor-pointer group hover:bg-white/5 p-3 rounded-xl transition-colors -mx-3">
+                    <div key={post.id} className="flex flex-col gap-1 sm:gap-2 cursor-pointer group hover:bg-white/5 p-2 sm:p-3 rounded-xl transition-colors -mx-2 sm:-mx-3">
                       <div className="flex items-center gap-2">
-                        <span className={`text-[19px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] whitespace-nowrap ${getCategoryColor(post.category)}`}>
+                        <span className={`text-[15px] sm:text-[19px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] whitespace-nowrap ${getCategoryColor(post.category)}`}>
                           [{post.category}]
                         </span>
-                        <h3 className="text-white text-[21px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] truncate group-hover:text-[#BBE1ED] transition-colors">
+                        <h3 className="text-white text-[17px] sm:text-[21px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] truncate group-hover:text-[#BBE1ED] transition-colors">
                           {post.title}
                         </h3>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <span className="text-[#ACACAC] text-[17px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]">
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-[#ACACAC] text-[13px] sm:text-[17px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]">
                           by {post.author} · {post.time}
                         </span>
                         <div className="flex items-center gap-1">
-                          <img src={iconBubble} alt="댓글" className="w-[18px] h-[18px] opacity-70" />
-                          <span className="text-[#ACACAC] text-[18px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]">
+                          <img src={iconBubble} alt="댓글" className="w-[14px] h-[14px] sm:w-[18px] sm:h-[18px] opacity-70" />
+                          <span className="text-[#ACACAC] text-[14px] sm:text-[18px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]">
                             {post.comments}
                           </span>
                         </div>
@@ -270,65 +239,48 @@ export default function Community() {
         </div>
       </main>
 
-      {/* ⭐ 5. 모달(Modal) 레이어 추가 */}
-      {/* selectedPost 값이 있을 때만 화면에 렌더링 됩니다. */}
+      {/* 모달(Modal) 레이어 */}
       {selectedPost && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-          
-          {/* 어두운 배경 (클릭 시 모달 닫기) */}
-          <div 
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer"
-            onClick={() => setSelectedPost(null)}
-          ></div>
-
-          {/* 팝업 컨텐츠 박스 */}
-          <div className="relative w-[800px] max-w-full bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] shadow-2xl border border-white/10 overflow-hidden flex flex-col z-10 transition-transform transform scale-100 animate-in fade-in zoom-in duration-200">
-            
-            {/* 닫기 (X) 버튼 */}
-            <button 
-              onClick={() => setSelectedPost(null)}
-              className="absolute top-4 right-4 w-10 h-10 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl transition-colors z-20"
-            >
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer" onClick={() => setSelectedPost(null)}></div>
+          <div className="relative w-full max-w-[800px] max-h-[90vh] overflow-y-auto dtk-scrollbar bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] shadow-2xl border border-white/10 flex flex-col z-10 animate-in fade-in zoom-in duration-200">
+            <button onClick={() => setSelectedPost(null)} className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl transition-colors z-20">
               &times;
             </button>
 
-            {/* 상단 썸네일 이미지 크게 보기 */}
-            <div className="w-full h-[450px] bg-black/50">
-              <img src={selectedPost.thumb} alt="상세 썸네일" className="w-full h-full object-cover" />
+            {/* 모달 이미지 높이 모바일 대응 */}
+            <div className="w-full h-[250px] sm:h-[450px] bg-black/50 shrink-0">
+              <img src={selectedPost.thumb} alt="상세 썸네일" className="w-full h-full object-contain sm:object-cover" />
             </div>
 
-            {/* 하단 상세 내용 */}
-            <div className="p-8 flex flex-col gap-4">
-              
-              <div className="flex items-center gap-4 border-b border-white/10 pb-4">
-                <img src={selectedPost.profile} alt="프로필" className="w-[60px] h-[60px] rounded-full border-2 border-[#89A5A7]" />
+            <div className="p-5 sm:p-8 flex flex-col gap-4">
+              <div className="flex items-center gap-3 sm:gap-4 border-b border-white/10 pb-4">
+                <img src={selectedPost.profile} alt="프로필" className="w-[45px] h-[45px] sm:w-[60px] sm:h-[60px] rounded-full border-2 border-[#89A5A7]" />
                 <div>
-                  <h3 className="text-white text-[24px] font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">
+                  <h3 className="text-white text-[18px] sm:text-[24px] font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">
                     {selectedPost.title}
                   </h3>
-                  <p className="text-[#ACACAC] text-[16px]">
+                  <p className="text-[#ACACAC] text-[13px] sm:text-[16px]">
                     by {selectedPost.author} · {new Date(selectedPost.date).toLocaleString('ko-KR')}
                   </p>
                 </div>
               </div>
 
-              {/* 본문 텍스트 (더미 데이터) */}
-              <div className="text-[#DEDEDE] text-[18px] leading-relaxed py-4 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">
+              <div className="text-[#DEDEDE] text-[15px] sm:text-[18px] leading-relaxed py-2 sm:py-4 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">
                 유저님이 공유해주신 멋진 스크린샷입니다!<br/>
                 도타이쿤 서버에서 즐거운 시간 보내고 계신 것 같아 기쁘네요. 앞으로도 많은 활동 부탁드립니다!
               </div>
 
-              <div className="flex items-center gap-6 pt-2">
-                <div className="flex items-center gap-2">
-                  <img src={iconLike} alt="좋아요" className="w-[28px] h-[28px]" />
-                  <span className="text-white text-[20px] font-semibold">{selectedPost.likes}</span>
+              <div className="flex items-center gap-4 sm:gap-6 pt-2">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <img src={iconLike} alt="좋아요" className="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px]" />
+                  <span className="text-white text-[16px] sm:text-[20px] font-semibold">{selectedPost.likes}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <img src={iconBubble} alt="댓글" className="w-[22px] h-[22px]" />
-                  <span className="text-white text-[20px] font-semibold">{selectedPost.comments}</span>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <img src={iconBubble} alt="댓글" className="w-[16px] h-[16px] sm:w-[22px] sm:h-[22px]" />
+                  <span className="text-white text-[16px] sm:text-[20px] font-semibold">{selectedPost.comments}</span>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

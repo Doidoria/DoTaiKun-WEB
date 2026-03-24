@@ -1,14 +1,11 @@
-// src/components/News.jsx
 import { useState } from 'react';
 
-// ⭐ 1. 자산(assets) 폴더에서 돋보기와 썸네일 이미지들을 불러옵니다. (파일명 오타 주의!)
 import iconSearch from '../assets/icon-돋보기.png';
 import imgNotice from '../assets/소식(공지&점검).png';
 import imgUpdateContent from '../assets/소식(업데이트-내용).png';
 import imgUpdateDungeon from '../assets/소식(업데이트-던전).png';
 import imgEvent from '../assets/소식(이벤트).png';
 
-// ⭐ 2. newsData에 각 게시글 성격에 맞는 이미지(imgSrc)를 추가로 달아줍니다.
 const newsData = [
   { id: 1, type: '공지사항', title: '서버 점검 안내', desc: '더욱 안정적인 서비스를 위해 정기 서버 점검이 진행될 예정입니다. 점검 시간 동안에는 게임 접속 및 플레이가 불가능하오니, 이용에 참고하시기 바랍니다.', date: '2026-02-28', color: 'text-[#F47373]', imgSrc: imgNotice },
   { id: 2, type: '이벤트', title: '낚시 이벤트', desc: '강가에서 희귀한 물고기를 낚아보세요! 낚시 포인트로 전용 상점에 있는 마인크래프트 전용 전설 장비와 교환할 수 있습니다.', date: '2026-03-01', color: 'text-[#73F482]', imgSrc: imgEvent },
@@ -36,13 +33,13 @@ function CategoryBtn({ text, isActive, onClick }) {
   return (
     <button 
       onClick={onClick}
-      className={`w-[150px] h-[45px] rounded-[25px] flex items-center justify-center transition-all duration-300 ${
+      className={`w-full sm:w-[150px] h-[40px] sm:h-[45px] rounded-[25px] flex items-center justify-center transition-all duration-300 ${
         isActive 
           ? 'bg-gradient-to-r from-[#7696A1] to-[#94BDCA] shadow-[inset_2px_4px_8px_rgba(0,0,0,0.4)] text-white scale-95 border border-white/20' 
           : 'bg-gradient-to-r from-[#B7D6DB] to-[#94BDCA] shadow-[0px_6px_10px_rgba(0,0,0,0.2)] text-white/80 hover:-translate-y-1 hover:brightness-110 hover:text-white'
       }`}
     >
-      <span className={`text-[20px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] transition-all ${isActive ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.6)]' : ''}`}>
+      <span className={`text-[16px] sm:text-[20px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] transition-all ${isActive ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.6)]' : ''}`}>
         {text}
       </span>
     </button>
@@ -73,24 +70,26 @@ export default function News() {
 
   return (
     <main 
-      className="w-full flex-1 pt-[200px] pb-[100px] relative z-10 flex flex-col items-center" 
+      className="w-full flex-1 pt-[150px] md:pt-[200px] pb-[100px] relative z-10 flex flex-col items-center min-h-screen" 
       style={{ background: 'linear-gradient(180deg, #7ABADB 23.56%, #9BD1D5 43.75%, #0F2432 100%)' }}
     >
-      <h1 className="text-center text-white text-[60px] font-bold drop-shadow-[-1px_5px_7px_rgba(0,0,0,0.25)] mb-[28px]">
+      <h1 className="text-center text-white text-[45px] md:text-[60px] font-bold drop-shadow-[-1px_5px_7px_rgba(0,0,0,0.25)] mb-[20px] md:mb-[28px]">
         소식
       </h1>
 
-      <div className="w-[1278px]">
-        {/* 상단 툴바 */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-4">
+      <div className="w-full max-w-[1278px] px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          
+          {/* 카테고리 버튼들: 모바일에서 2줄(grid) 또는 감싸기(flex-wrap) */}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 w-full md:w-auto">
             <CategoryBtn text="전체" isActive={activeCategory === '전체'} onClick={() => handleCategoryClick('전체')} />
             <CategoryBtn text="공지사항" isActive={activeCategory === '공지사항'} onClick={() => handleCategoryClick('공지사항')} />
             <CategoryBtn text="업데이트" isActive={activeCategory === '업데이트'} onClick={() => handleCategoryClick('업데이트')} />
             <CategoryBtn text="이벤트" isActive={activeCategory === '이벤트'} onClick={() => handleCategoryClick('이벤트')} />
           </div>
 
-          <div className="w-[294px] h-[45px] rounded-[10px] bg-gradient-to-r from-[#BBE1ED] to-[#B4DCE8] shadow-[-1px_6px_10px_rgba(0,0,0,0.25)] flex items-center px-4">
+          {/* 검색창: 모바일에서 꽉 차게(w-full) */}
+          <div className="w-full md:w-[294px] h-[45px] rounded-[10px] bg-gradient-to-r from-[#BBE1ED] to-[#B4DCE8] shadow-[-1px_6px_10px_rgba(0,0,0,0.25)] flex items-center px-4 shrink-0">
             <input 
               type="text"
               value={searchTerm}
@@ -99,44 +98,41 @@ export default function News() {
                 setVisibleCount(9);
               }}
               placeholder="검색"
-              className="w-full bg-transparent text-white text-[20px] font-medium placeholder:text-white/70 outline-none drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]"
+              className="w-full bg-transparent text-white text-[18px] sm:text-[20px] font-medium placeholder:text-white/70 outline-none drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]"
             />
-            {/* ⭐ 3. 불러온 돋보기 아이콘 적용 */}
-            <img src={iconSearch} alt="검색" className="w-6 h-6 object-contain flex-shrink-0 ml-2 drop-shadow-md" />
+            <img src={iconSearch} alt="검색" className="w-5 h-5 sm:w-6 sm:h-6 object-contain flex-shrink-0 ml-2 drop-shadow-md" />
           </div>
         </div>
 
         {/* 게시판 메인 박스 */}
-        <div className="w-full h-auto bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] p-[20px] pb-10 flex flex-col items-center">
-          
-          <div className="grid grid-cols-3 gap-x-5 gap-y-6">
+        <div className="w-full h-auto bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] p-[15px] sm:p-[20px] pb-10 flex flex-col items-center shadow-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full place-items-center gap-x-5 gap-y-6">
             {displayedNews.map((item) => (
               <div 
                 key={item.id}
-                className="w-[398px] h-[149px] rounded-[20px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex items-center p-4 cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+                className="w-full max-w-[398px] h-auto min-h-[149px] rounded-[20px] shadow-[1px_7px_5px_rgba(0,0,0,0.25)] flex items-center p-3 sm:p-4 cursor-pointer hover:scale-[1.02] transition-transform duration-200"
                 style={{ background: 'linear-gradient(138.53deg, #496168 41.71%, #677F83 100%)' }}
               >
-                {/* ⭐ 4. 빈 박스 지우고 매핑된 썸네일(item.imgSrc) 적용 */}
                 <img 
                   src={item.imgSrc} 
                   alt="썸네일" 
-                  className="w-[125px] h-[115px] object-cover rounded-[15px] shadow-[-1px_5px_10px_rgba(0,0,0,0.25)] flex-shrink-0" 
+                  className="w-[100px] h-[100px] sm:w-[125px] sm:h-[115px] object-cover rounded-[15px] shadow-[-1px_5px_10px_rgba(0,0,0,0.25)] flex-shrink-0" 
                 />
                 
-                <div className="ml-4 flex flex-col justify-between h-[107px] w-[217px]">
+                <div className="ml-3 sm:ml-4 flex flex-col justify-between h-full py-1 flex-1 min-w-0">
                   <div>
-                    <span className={`${item.color} text-[18px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]`}>
+                    <span className={`${item.color} text-[15px] sm:text-[18px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]`}>
                       [{item.type}]
                     </span>
-                    <h2 className="text-[#EFEFEF] text-[21px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] mt-1 truncate w-full">
+                    <h2 className="text-[#EFEFEF] text-[18px] sm:text-[21px] font-semibold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] mt-1 truncate w-full">
                       {item.title}
                     </h2>
                   </div>
-                  <div>
-                    <p className="text-[#DEDEDE] text-[17px] font-medium drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] truncate w-full">
+                  <div className="mt-2 sm:mt-0">
+                    <p className="text-[#DEDEDE] text-[14px] sm:text-[17px] font-medium drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] truncate w-full">
                       {item.desc}
                     </p>
-                    <p className="text-[#DEDEDE] text-[17px] font-medium drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] mt-1">
+                    <p className="text-[#DEDEDE] text-[13px] sm:text-[17px] font-medium drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] mt-1 opacity-80">
                       {item.date}
                     </p>
                   </div>
