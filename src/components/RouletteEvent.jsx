@@ -26,8 +26,10 @@ export default function RouletteEvent() {
     }, []);
 
     const sendDiscordWebhook = async (winnerName, prize) => {
-        const webhookURL = "https://discord.com/api/webhooks/1485595750296719440/vhN18nIJB2V7yH9s2g1GNHHGSAWyt_zgjnOc73kqDEgtskbB5bGdglq07Jx3XGwuD01c";
+        // const webhookURL = "https://discord.com/api/webhooks/1485595750296719440/vhN18nIJB2V7yH9s2g1GNHHGSAWyt_zgjnOc73kqDEgtskbB5bGdglq07Jx3XGwuD01c";
+        const webhookURL = "https://discord.com/api/webhooks/1485562795906039848/8lVuoV9nmdgy7QQkKch3ZfxdXjanNHIXr5rpyBZwtaseE-ZM40Dfe0UL0WE8Qzp7byQc";
         // if (webhookURL === "여기에_디스코드_웹훅_URL_입력") return; { URL 없을시 에러 방지용 }
+        giveMinecraftReward(username, winningPrize);
 
         const message = {
             content: `**[도타이쿤 매일 무료 룰렛]** \`${winnerName}\`님이 **${prize}**에 당첨!🎉`,
@@ -80,6 +82,29 @@ export default function RouletteEvent() {
     };
 
     const wheelBackground = "repeating-conic-gradient(from -15deg, #757575 0 30deg, #616161 30deg 60deg)";
+
+    // 마인크래프트 서버로 보상 지급 요청을 보내는 함수
+    const giveMinecraftReward = async (username, prizeName) => {
+        try {
+        const response = await fetch("http://localhost:8080/api/reward", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+            username: username,
+            prizeName: prizeName // 당첨된 아이템 이름 (예: "10000 골드")
+            })
+        });
+        
+        const result = await response.json();
+        if(result.success) {
+            console.log("인게임 지급 성공!");
+        } else {
+            console.error("지급 실패:", result.message);
+        }
+        } catch (error) {
+        console.error("백엔드 서버와 통신 실패:", error);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#212121] flex flex-col items-center justify-start pt-[180px] md:pt-[220px] pb-20 font-sans relative overflow-x-hidden">
