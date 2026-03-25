@@ -29,7 +29,7 @@ export default function RouletteEvent() {
         // const webhookURL = "https://discord.com/api/webhooks/1485595750296719440/vhN18nIJB2V7yH9s2g1GNHHGSAWyt_zgjnOc73kqDEgtskbB5bGdglq07Jx3XGwuD01c";
         const webhookURL = "https://discord.com/api/webhooks/1485562795906039848/8lVuoV9nmdgy7QQkKch3ZfxdXjanNHIXr5rpyBZwtaseE-ZM40Dfe0UL0WE8Qzp7byQc";
         // if (webhookURL === "여기에_디스코드_웹훅_URL_입력") return; { URL 없을시 에러 방지용 }
-        giveMinecraftReward(username, winningPrize);
+        giveMinecraftReward(winnerName, prize);
 
         const message = {
             content: `**[도타이쿤 매일 무료 룰렛]** \`${winnerName}\`님이 **${prize}**에 당첨!🎉`,
@@ -63,7 +63,7 @@ export default function RouletteEvent() {
         const prizeIndex = Math.floor(Math.random() * items.length);
         const prize = items[prizeIndex];
 
-        const arc = 360 / items.length; // 30도
+        const arc = 360 / items.length;
         const targetAngle = 360 - (prizeIndex * arc);
         const newRotation = rotation + 1800 + targetAngle - (rotation % 360);
 
@@ -117,10 +117,10 @@ export default function RouletteEvent() {
                     ← 메인으로 돌아가기
                 </a>
                 {/* 임시 테스트용 초기화 버튼 (안전한 위치로 이동) */}
-                {/* <button onClick={() => {localStorage.removeItem("roulette_last_play"); window.location.reload();}}
+                <button onClick={() => {localStorage.removeItem("roulette_last_play"); window.location.reload();}}
                     className="bg-red-600 text-white px-3 py-2 text-sm font-bold rounded border-2 border-[#1C1C1C] shadow-[2px_2px_0_#000] hover:bg-red-700 transition-colors active:translate-y-1 active:shadow-none">
                     [테스트] 기록 삭제
-                </button> */}
+                </button>
             </div>
 
             {/* 헤더 타이틀 */}
