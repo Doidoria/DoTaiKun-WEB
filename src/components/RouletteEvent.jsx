@@ -86,12 +86,12 @@ export default function RouletteEvent() {
     // 마인크래프트 서버로 보상 지급 요청을 보내는 함수
     const giveMinecraftReward = async (username, prizeName) => {
         try {
-        const response = await fetch("http://localhost:8080/api/reward", {
+        const response = await fetch("https://doidori.o-r.kr/api/reward", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
             username: username,
-            prizeName: prizeName // 당첨된 아이템 이름 (예: "10000 골드")
+            prizeName: prizeName
             })
         });
         
