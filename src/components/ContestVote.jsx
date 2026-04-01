@@ -33,7 +33,7 @@ export default function ContestVote() {
   };
 
   useEffect(() => {
-    const voted = localStorage.getItem('contest_voted');
+    const voted = localStorage.getItem('contest_voted_v2');
     if (voted) setHasVoted(true);
 
     const endDate = new Date('2026-04-02T06:00:00+09:00');
@@ -51,7 +51,7 @@ export default function ContestVote() {
           
           if (ipDocSnap.exists()) {
             setHasVoted(true);
-            localStorage.setItem('contest_voted', 'true');
+            localStorage.setItem('contest_voted_v2', 'true');
           }
         }
 
@@ -92,7 +92,7 @@ export default function ContestVote() {
 
         if (ipDocSnap.exists()) {
           setHasVoted(true);
-          localStorage.setItem('contest_voted', 'true');
+          localStorage.setItem('contest_voted_v2', 'true');
           return alert("이미 투표에 참여한 IP입니다. (1인 1표 제한)");
         }
 
@@ -109,7 +109,7 @@ export default function ContestVote() {
 
         setCandidates(prev => prev.map(c => c.id === id ? { ...c, votes: c.votes + 1 } : c));
         setHasVoted(true);
-        localStorage.setItem('contest_voted', 'true');
+        localStorage.setItem('contest_voted_v2', 'true');
         
         alert("투표가 완료되었습니다!");
       } catch (error) {
