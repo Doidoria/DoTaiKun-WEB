@@ -259,14 +259,13 @@ export default function AnnounceAdmin() {
                   📢 {formData.title || "제목이 여기에 표시됩니다"}
                 </h3>
                 
-                <div className="text-[#DBDEE1] text-sm whitespace-pre-wrap mb-4 break-words">
-                  {formData.content || "공지사항 내용이 여기에 표시됩니다..."}
-                  <br/><br/>
-                  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+                <div className="text-[#DBDEE1] text-sm whitespace-pre-wrap mb-4 break-words w-full">
+                    {formData.content || "공지사항 내용이 여기에 표시됩니다..."}
+                    <hr className="border-[#43444B] mt-5 mb-1 w-full" />
                 </div>
                 
                 {previewUrl && (
-                  <img src={previewUrl} alt="preview" className="rounded-md max-w-full max-h-[300px] object-contain mb-4" />
+                    <img src={previewUrl} alt="preview" className="rounded-md max-w-full max-h-[300px] object-contain mb-4" />
                 )}
                 
                 <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
