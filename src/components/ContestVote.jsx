@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '../../firebase.js';
-import { collection, getDocs, doc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, updateDoc, increment, getDoc } from 'firebase/firestore';
 
 // 1. 데이터 구조 변경: mainImg(썸네일), images(슬라이드용 배열)
 const initialCandidates = [
@@ -21,6 +21,17 @@ export default function ContestVote() {
   const [activeCandidate, setActiveCandidate] = useState(null); // 현재 클릭한 참가자
   const [currentImgIndex, setCurrentImgIndex] = useState(0); // 현재 보고 있는 사진 인덱스
 
+  const getUserIP = async () => {
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      return data.ip;
+    } catch (error) {
+      console.error("IP 가져오기 실패:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const voted = localStorage.getItem('contest_voted');
     if (voted) setHasVoted(true);
@@ -32,6 +43,18 @@ export default function ContestVote() {
     }
     const fetchCandidates = async () => {
       try {
+        const ip = await getUserIP();
+        if (ip) {
+          const safeIp = ip.replace(/[\.\:]/g, '_'); // IP 주소 특수문자 변환
+          const ipDocRef = doc(db, "contest_voted_ips", safeIp);
+          const ipDocSnap = await getDoc(ipDocRef);
+          
+          if (ipDocSnap.exists()) {
+            setHasVoted(true);
+            localStorage.setItem('contest_voted', 'true');
+          }
+        }
+
         const querySnapshot = await getDocs(collection(db, "contest_votes"));
         
         if (querySnapshot.empty) {
@@ -60,11 +83,30 @@ export default function ContestVote() {
     
     if (window.confirm("이 작품에 투표하시겠습니까? (투표 후 변경 불가)")) {
       try {
+        const ip = await getUserIP();
+        if (!ip) return alert("네트워크 상태가 불안정하여 투표할 수 없습니다.");
+
+        const safeIp = ip.replace(/[\.\:]/g, '_');
+        const ipDocRef = doc(db, "contest_voted_ips", safeIp);
+        const ipDocSnap = await getDoc(ipDocRef);
+
+        if (ipDocSnap.exists()) {
+          setHasVoted(true);
+          localStorage.setItem('contest_voted', 'true');
+          return alert("이미 투표에 참여한 IP입니다. (1인 1표 제한)");
+        }
+
         const candidateRef = doc(db, "contest_votes", id.toString());
         await updateDoc(candidateRef, {
           votes: increment(1)
         });
         
+        await setDoc(ipDocRef, {
+          ip: ip,
+          votedAt: new Date().toISOString(),
+          candidateId: id
+        });
+
         setCandidates(prev => prev.map(c => c.id === id ? { ...c, votes: c.votes + 1 } : c));
         setHasVoted(true);
         localStorage.setItem('contest_voted', 'true');
