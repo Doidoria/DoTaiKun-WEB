@@ -3,13 +3,11 @@ import { motion } from 'framer-motion';
 import { db } from '../../firebase.js';
 import { collection, getDocs, doc, setDoc, updateDoc, increment } from 'firebase/firestore';
 
+// 1. 데이터 구조 변경: mainImg(썸네일), images(슬라이드용 배열)
 const initialCandidates = [
-  { id: 1, title: "참가자 1 건축물", author: "유저1", img: "", votes: 0 },
-  { id: 2, title: "참가자 2 건축물", author: "유저2", img: "", votes: 0 },
-  { id: 3, title: "참가자 3 건축물", author: "유저3", img: "", votes: 0 },
-  { id: 4, title: "참가자 4 건축물", author: "유저4", img: "", votes: 0 },
-  { id: 5, title: "참가자 5 건축물", author: "유저5", img: "", votes: 0 },
-  { id: 6, title: "참가자 6 건축물", author: "유저6", img: "", votes: 0 },
+  { id: 1, title: "참가자 1 건축물", author: "유저1", mainImg: "", images: [], votes: 0 },
+  { id: 2, title: "참가자 2 건축물", author: "유저2", mainImg: "", images: [], votes: 0 },
+  { id: 3, title: "참가자 3 건축물", author: "유저3", mainImg: "", images: [], votes: 0 },
 ];
 
 export default function ContestVote() {
@@ -18,11 +16,16 @@ export default function ContestVote() {
   const [isEnded, setIsEnded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // 2. 팝업(모달) 관련 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCandidate, setActiveCandidate] = useState(null); // 현재 클릭한 참가자
+  const [currentImgIndex, setCurrentImgIndex] = useState(0); // 현재 보고 있는 사진 인덱스
+
   useEffect(() => {
     const voted = localStorage.getItem('contest_voted');
     if (voted) setHasVoted(true);
 
-    const endDate = new Date('2026-04-01T00:00:00+09:00');
+    const endDate = new Date('2026-04-02T06:00:00+09:00');
     const now = new Date();
     if (now >= endDate) {
       setIsEnded(true);
@@ -56,21 +59,49 @@ export default function ContestVote() {
     if (hasVoted) return alert("이미 투표에 참여하셨습니다!");
     
     if (window.confirm("이 작품에 투표하시겠습니까? (투표 후 변경 불가)")) {
-      setCandidates(prev => prev.map(c => c.id === id ? { ...c, votes: c.votes + 1 } : c));
-      setHasVoted(true);
-      localStorage.setItem('contest_voted', 'true');
-
       try {
         const candidateRef = doc(db, "contest_votes", id.toString());
         await updateDoc(candidateRef, {
           votes: increment(1)
         });
+        
+        setCandidates(prev => prev.map(c => c.id === id ? { ...c, votes: c.votes + 1 } : c));
+        setHasVoted(true);
+        localStorage.setItem('contest_voted', 'true');
+        
         alert("투표가 완료되었습니다!");
       } catch (error) {
         console.error("투표 전송 실패:", error);
         alert("오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
+  };
+
+  // --- 팝업 관련 함수 ---
+  const openModal = (candidate) => {
+    // 사진이 배열로 존재할 때만 팝업 열기
+    if (candidate.images && candidate.images.length > 0) {
+      setActiveCandidate(candidate);
+      setCurrentImgIndex(0);
+      setIsModalOpen(true);
+    } else {
+      alert("등록된 상세 이미지가 없습니다.");
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActiveCandidate(null);
+  };
+
+  const nextImg = (e) => {
+    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    setCurrentImgIndex((prev) => (prev + 1) % activeCandidate.images.length);
+  };
+
+  const prevImg = (e) => {
+    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    setCurrentImgIndex((prev) => (prev - 1 + activeCandidate.images.length) % activeCandidate.images.length);
   };
 
   const winner = candidates.length > 0 ? [...candidates].sort((a, b) => b.votes - a.votes)[0] : null;
@@ -86,14 +117,6 @@ export default function ContestVote() {
     >
       <div className="w-full max-w-[1200px] px-4">
         
-        {/* 뒤로 가기 및 테스트용 버튼 */}
-        {/* <div className="mb-10 flex justify-between items-center z-10">
-          <button onClick={() => {localStorage.removeItem("contest_voted"); window.location.reload();}}
-              className="bg-red-600 text-white px-3 py-2 text-sm font-bold rounded border-2 border-[#1C1C1C] shadow-[2px_2px_0_#000] hover:bg-red-700 transition-colors active:translate-y-1 active:shadow-none">
-              [테스트] 투표 락 해제
-          </button>
-        </div> */}
-
         {/* 상단 타이틀 영역 */}
         <div className="text-center mb-12">
           <h1 className="text-white text-[45px] md:text-[60px] font-bold drop-shadow-[-1px_5px_7px_rgba(0,0,0,0.25)] mb-4">
@@ -113,15 +136,25 @@ export default function ContestVote() {
             <h2 className="text-[#F2EACE] text-[40px] font-black tracking-wider mb-6 drop-shadow-[2px_2px_0_#000]">
               🥇 대망의 1위 우승작
             </h2>
-            <div className="w-full h-[350px] bg-black/50 rounded-[15px] overflow-hidden mb-6 border-4 border-[#E6BE39] relative shadow-inner">
-               {winner.img ? (
-                 <img src={winner.img} alt={winner.title} className="w-full h-full object-cover" />
+            {/* 우승자 이미지: 클릭 시 모달 열기 */}
+            <div 
+              className="w-full h-[350px] bg-black/50 rounded-[15px] overflow-hidden mb-6 border-4 border-[#E6BE39] relative shadow-inner cursor-pointer"
+              onClick={() => openModal(winner)}
+            >
+               {winner.mainImg ? (
+                 <img src={winner.mainImg} alt={winner.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                ) : (
                  <div className="flex items-center justify-center w-full h-full text-white/50 text-xl font-bold">이미지 준비중</div>
                )}
                <div className="absolute top-4 right-4 bg-[#E6BE39] text-[#1C1C1C] font-black px-5 py-2 rounded-full shadow-[2px_4px_0_rgba(0,0,0,0.5)] text-xl border-2 border-black">
                  {winner.votes}표
                </div>
+               {/* 사진 여러장 표시 아이콘 */}
+               {winner.images && winner.images.length > 0 && (
+                 <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-bold border border-white/30">
+                  +{winner.images.length}
+                 </div>
+               )}
             </div>
             <h3 className="text-white text-[35px] font-bold drop-shadow-[2px_2px_0_#000] mb-2">{winner.title}</h3>
             <p className="text-[#8DFF95] text-[22px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)]">제작자: {winner.author}</p>
@@ -133,15 +166,25 @@ export default function ContestVote() {
                 key={candidate.id}
                 className="bg-gradient-to-b from-[#194D56] to-[#102A3E] rounded-[20px] p-5 shadow-[1px_7px_15px_rgba(0,0,0,0.3)] flex flex-col items-center hover:-translate-y-2 transition-transform duration-300"
               >
-                <div className="w-full h-[220px] bg-[#132936] rounded-[15px] overflow-hidden mb-5 border border-white/10 flex items-center justify-center relative shadow-inner">
-                  {candidate.img ? (
-                    <img src={candidate.img} alt={candidate.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                {/* 후보자 이미지: 클릭 시 모달 열기 */}
+                <div 
+                  className="w-full h-[220px] bg-[#132936] rounded-[15px] overflow-hidden mb-5 border border-white/10 flex items-center justify-center relative shadow-inner cursor-pointer"
+                  onClick={() => openModal(candidate)}
+                >
+                  {candidate.mainImg ? (
+                    <img src={candidate.mainImg} alt={candidate.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
                   ) : (
                     <span className="text-white/40 font-bold text-lg">이미지 등록 대기중</span>
                   )}
                   <div className="absolute top-3 right-3 bg-black/70 border border-white/20 text-white font-bold text-sm px-3 py-1 rounded-md">
                     {candidate.votes}표
                   </div>
+                  {/* 사진 여러장 표시 아이콘 */}
+                  {candidate.images && candidate.images.length > 0 && (
+                     <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded-md text-xs font-bold border border-white/30">
+                       +{candidate.images.length}
+                     </div>
+                  )}
                 </div>
 
                 <h3 className="text-white text-[24px] font-bold drop-shadow-[1px_2px_2px_rgba(0,0,0,0.35)] w-full truncate text-center mb-1">
@@ -167,6 +210,58 @@ export default function ContestVote() {
           </div>
         )}
       </div>
+
+      {/* 3. 이미지 팝업(모달) UI 추가 */}
+      {isModalOpen && activeCandidate && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+          onClick={closeModal} // 배경 클릭 시 닫힘
+        >
+          <div 
+            className="relative w-full max-w-[1000px] flex items-center justify-between"
+            onClick={e => e.stopPropagation()} // 이미지 영역 클릭 시 닫힘 방지
+          >
+            {/* 닫기 버튼 */}
+            <button 
+              onClick={closeModal} 
+              className="absolute -top-12 right-0 text-white text-4xl hover:text-[#E6BE39] transition-colors"
+            >
+              &times;
+            </button>
+
+            {/* 왼쪽 화살표 */}
+            <button 
+              onClick={prevImg} 
+              className="text-white text-5xl hover:scale-125 hover:text-[#E6BE39] transition-all p-2 drop-shadow-lg z-10"
+            >
+              &#10094;
+            </button>
+
+            {/* 현재 이미지 */}
+            <div className="flex-1 px-4">
+              <img 
+                src={activeCandidate.images[currentImgIndex]} 
+                alt={`${activeCandidate.title} 상세 이미지 ${currentImgIndex + 1}`} 
+                className="max-h-[80vh] object-contain mx-auto rounded-lg shadow-[0_0_30px_rgba(0,0,0,0.8)] border-2 border-white/20 bg-[#1C1C1C]" 
+              />
+            </div>
+
+            {/* 오른쪽 화살표 */}
+            <button 
+              onClick={nextImg} 
+              className="text-white text-5xl hover:scale-125 hover:text-[#E6BE39] transition-all p-2 drop-shadow-lg z-10"
+            >
+              &#10095;
+            </button>
+
+            {/* 하단 페이지 표시 (ex: 1 / 5) */}
+            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl drop-shadow-md bg-black/50 px-4 py-1 rounded-full border border-white/20">
+              {currentImgIndex + 1} / {activeCandidate.images.length}
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }

@@ -8,6 +8,7 @@ import News from './components/News';
 import Community from './components/Community';
 import RouletteEvent from './components/RouletteEvent';
 import ContestVote from './components/ContestVote';
+import ContestAdmin from './components/ContestAdmin';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/community" element={<Community />} />
           <Route path="/roulett-Event" element={<RouletteEvent />} />
           <Route path="/contest" element={<ContestVote />} />
+          <Route path="/admin-vote" element={<ContestAdmin />} />
         </Routes>
         <Footer />
       </div>

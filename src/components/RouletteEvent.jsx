@@ -108,8 +108,6 @@ export default function RouletteEvent() {
 
     return (
         <div className="min-h-screen bg-[#212121] flex flex-col items-center justify-start pt-[180px] md:pt-[220px] pb-20 font-sans relative overflow-x-hidden">
-
-            {/* 2. 뒤로 가기 버튼을 absolute에서 빼고 일반 박스로 만들어 헤더 밑에 안전하게 배치 */}
             <div className="w-full max-w-md px-4 mb-8 flex justify-start z-10 gap-5">
                 <a href="/"
                     className="px-4 py-2 bg-[#424242] text-white font-bold rounded-sm border-2 border-[#1C1C1C] transition-all
