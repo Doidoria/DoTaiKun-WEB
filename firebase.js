@@ -3,7 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDa8CyM6tG...",
+  apiKey: "AIzaSyDa8cyM6tGHavE_qzlhJv1zbpuhlMUdo0k",
   authDomain: "dotaikun-web.firebaseapp.com",
   projectId: "dotaikun-web",
   storageBucket: "dotaikun-web.firebasestorage.app",
