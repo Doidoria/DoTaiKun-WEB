@@ -52,9 +52,6 @@ export default function AnnounceAdmin() {
     author: '도타이쿤 운영진',
   });
 
-  // 🌟 고퀄리티 레이아웃을 위한 동적 필드(Fields) 상태 추가
-  const [fields, setFields] = useState([]);
-
   // 🌟 이미지 파일 상태 분리 (메인 이미지 vs 우측 상단 썸네일)
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
@@ -71,24 +68,6 @@ export default function AnnounceAdmin() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // 🌟 필드 추가 함수 (최대 25개 제한)
-  const handleAddField = () => {
-    if (fields.length >= 25) {
-      return alert("디스코드 규정상 필드는 최대 25개까지만 생성할 수 있습니다.");
-    }
-    setFields(prev => [...prev, { id: Date.now(), name: '', value: '' }]);
-  };
-
-  // 🌟 필드 내용 변경 핸들러
-  const handleFieldChange = (id, key, value) => {
-    setFields(prev => prev.map(f => f.id === id ? { ...f, [key]: value } : f));
-  };
-
-  // 🌟 필드 삭제 함수
-  const handleRemoveField = (id) => {
-    setFields(prev => prev.filter(f => f.id !== id));
   };
 
   // 메인 이미지 파일 선택 핸들러 (원본 유지)
@@ -140,11 +119,6 @@ export default function AnnounceAdmin() {
         finalThumbnailUrl = await getDownloadURL(thumbRef);
       }
 
-      // 3. 입력된 필드 중 제목과 내용이 둘 다 채워진 유효한 필드만 필터링
-      const validFields = fields
-        .filter(f => f.name.trim() && f.value.trim())
-        .map(f => ({ name: f.name.trim(), value: f.value.trim() }));
-
       // 4. 백엔드 API로 통합 데이터 전송 요청
       const BACKEND_URL = "http://localhost:8080/api/announce"; 
       
@@ -159,7 +133,6 @@ export default function AnnounceAdmin() {
           author: formData.author,
           imageUrl: finalImageUrl,
           thumbnailUrl: finalThumbnailUrl, // 동적 썸네일 추가
-          fields: validFields // 가공된 필드 배열 추가
         })
       });
 
@@ -169,7 +142,6 @@ export default function AnnounceAdmin() {
         alert("성공적으로 디스코드에 공지가 전송되었습니다! 🎉");
         // 원본 양식 초기화 텍스트 100% 복구 (👑 도타이쿤 운영진)
         setFormData({ title: '', content: '', author: '👑 도타이쿤 운영진' });
-        setFields([]);
         setImageFile(null);
         setPreviewUrl('');
         setThumbnailFile(null);
@@ -248,48 +220,7 @@ export default function AnnounceAdmin() {
               />
             </div>
 
-            {/* 🌟 프리미엄 동적 하이라이트 컨테이너 */}
-            <div className="border-t border-white/10 pt-4 space-y-3">
-              <div className="flex justify-between items-center">
-                <label className="block text-sm text-[#E6BE39] font-bold">💎 하이라이트 항목 카드 (선택 필드)</label>
-                <button 
-                  type="button" onClick={handleAddField}
-                  className="bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs px-3 py-1.5 rounded font-bold transition-all flex items-center gap-1 shadow-md"
-                >
-                  ➕ 항목 추가하기
-                </button>
-              </div>
-
-              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
-                {fields.length === 0 && (
-                  <p className="text-xs text-gray-500 italic py-2 text-center bg-[#1C1C1C] rounded-lg border border-dashed border-gray-700">
-                    추가된 하이라이트 항목이 없습니다. (더 화려하게 꾸미려면 추가해 보세요!)
-                  </p>
-                )}
-                {fields.map((field) => (
-                  <div key={field.id} className="bg-[#1C1C1C] p-3 rounded-lg border border-gray-700 flex gap-2 items-center shadow-inner">
-                    <input 
-                      type="text" placeholder="예: ✨ 이벤트 보상" value={field.name}
-                      onChange={(e) => handleFieldChange(field.id, 'name', e.target.value)}
-                      className="w-1/3 bg-[#2A2A2A] border border-gray-600 rounded px-2 py-1.5 text-xs font-bold text-[#E6BE39] focus:outline-none focus:border-[#E6BE39]"
-                    />
-                    <textarea 
-                      placeholder="상세 내용을 입력하세요. (줄바꿈 가능)" value={field.value}
-                      onChange={(e) => handleFieldChange(field.id, 'value', e.target.value)}
-                      className="w-2/3 bg-[#2A2A2A] border border-gray-600 rounded px-2 py-1 text-xs text-white h-10 resize-none focus:outline-none focus:border-[#E6BE39]"
-                    />
-                    <button 
-                      type="button" onClick={() => handleRemoveField(field.id)}
-                      className="text-red-400 hover:text-red-600 font-bold px-2 text-sm"
-                    >
-                      ❌
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 파일 및 작성자 업로드 영역 (3분할 복구 및 썸네일 기능 추가) */}
+            {/* 파일 및 작성자 업로드 영역 */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/10 pt-4">
               <div>
                 <label className="block text-sm text-gray-400 mb-2 font-bold">작성자 (Author)</label>
@@ -381,27 +312,8 @@ export default function AnnounceAdmin() {
                 
                 <div className="text-[#DBDEE1] text-sm whitespace-pre-wrap break-words w-full pr-2">
                     {formData.content || "공지사항 내용이 여기에 표시됩니다..."}
-                    {/* 🌟 모바일에서도 절대 안 부서지는 줄바꿈 방지 구분선 */}
                     <div className="text-gray-500 my-2 select-none">━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
                 </div>
-
-                {/* 🌟 100% 매칭: 디스코드 코드 블록 스타일 회색 사각 박스 리얼 미러링 */}
-                {fields.filter(f => f.name.trim() || f.value.trim()).length > 0 && (
-                  <div className="space-y-3 mt-4">
-                    {fields.map((f, index) => (
-                      (f.name.trim() || f.value.trim()) && (
-                        <div key={f.id || index} className="min-w-0 break-words">
-                          <div className="text-[#E6BE39] font-extrabold text-xs mb-1">
-                            {f.name || "📌 항목 이름 미지정"}
-                          </div>
-                          <div className="bg-[#1e1f22] p-2.5 rounded border border-black/20 text-[#dbdee1] text-xs font-mono whitespace-pre-wrap leading-relaxed shadow-inner">
-                            {f.value || "상세 내용 미입력"}
-                          </div>
-                        </div>
-                      )
-                    ))}
-                  </div>
-                )}
                 
                 {previewUrl && (
                   <div className="mt-4 bg-[#1E1F22] rounded-md overflow-hidden border border-white/5">
